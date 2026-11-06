@@ -1,0 +1,28 @@
+# Datos: no se versionan (solo la estructura y el catálogo)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+outputs/*
+!outputs/.gitkeep
+
+# Certificados corporativos
+.devcontainer/certs/*.crt
+.devcontainer/certs/*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+
+# Secretos y configuración local de Claude
+.env
+.env.*
+.claude/settings.local.json
+
+# SO / editores
+.DS_Store
+Thumbs.db
