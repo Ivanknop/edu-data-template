@@ -1,11 +1,15 @@
-# edu-data-claude
+# edu-data-template
 
-Entorno reproducible (devcontainer) para analizar datasets educativos con Python y Claude Code.
+Entorno reproducible (devcontainer) para analizar datasets con Python y Claude Code.
 No requiere Python instalado en la máquina: solo Docker.
 
 ## Requisitos
-- Docker Desktop (Windows/macOS) o Docker Engine (Linux). En Windows, con backend WSL2.
+- Linux con Docker Engine.
 - VS Code con la extensión **Dev Containers** (`ms-vscode-remote.remote-containers`).
+
+## Usar como plantilla
+1. En GitHub: **Use this template** → **Create a new repository**.
+2. En el repo nuevo, quitar `uv.lock` del `.gitignore` y commitearlo después del primer `uv sync`.
 
 ## Uso
 1. Clonar el repo y abrirlo en VS Code.
@@ -18,6 +22,7 @@ No requiere Python instalado en la máquina: solo Docker.
 - Claude Code (CLI + extensión de VS Code) con un `CLAUDE.md` que fija convenciones de datos
   y rigor estadístico (ponderadores, valores plausibles).
 - Permisos de Claude que impiden modificar `data/raw/`.
+  Es un recordatorio, no una garantía: un script o comando de shell igual puede escribir ahí.
 
 ## Comandos frecuentes
 ```bash
@@ -27,15 +32,3 @@ uv run jupyter lab --ip 0.0.0.0 --no-browser   # o abrir .ipynb directo en VS Co
 uv run ruff check . && uv run ruff format .
 ```
 
-Commitear `uv.lock` (se genera en el primer `uv sync`): garantiza las mismas versiones en ambas PCs.
-
-## Red corporativa
-- **Proxy**: si la PC define `HTTP_PROXY`/`HTTPS_PROXY`, Docker los usa en el build. Para
-  el contenedor en ejecución, configuralos en Docker Desktop → Settings → Resources → Proxies.
-- **Inspección SSL**: copiar el certificado raíz (`.crt`, PEM) en `.devcontainer/certs/` y
-  hacer *Rebuild Container*. No se sube a git.
-
-## Problemas comunes
-- `bad interpreter: /bin/bash^M` → el `.sh` quedó con CRLF. El `.gitattributes` lo evita;
-  si ya clonaste antes: `git rm --cached -r . && git reset --hard`.
-- Claude pide login de nuevo → se borró el volumen (`docker volume ls | grep edu-data`).

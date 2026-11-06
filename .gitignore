@@ -6,7 +6,7 @@ data/processed/*
 outputs/*
 !outputs/.gitkeep
 
-# Certificados corporativos
+# Certificados
 .devcontainer/certs/*.crt
 .devcontainer/certs/*.pem
 
@@ -17,8 +17,10 @@ __pycache__/
 .ipynb_checkpoints/
 .pytest_cache/
 .ruff_cache/
+# Plantilla: cada proyecto derivado versiona su propio lock
+uv.lock
 
-# Secretos y configuración local de Claude
+# Secrets y configuración local de Claude
 .env
 .env.*
 .claude/settings.local.json

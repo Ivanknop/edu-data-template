@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/python:3.12-bookworm
 
 # uv: gestor de dependencias/entornos (binario estático, sin depender de pip)
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.7 /uv /uvx /usr/local/bin/
 
 # Certificados corporativos opcionales (inspección SSL en la red del trabajo).
 # Poné tus .crt en .devcontainer/certs/; si la carpeta está vacía no pasa nada.

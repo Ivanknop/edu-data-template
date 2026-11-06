@@ -1,10 +1,9 @@
 {
-  "name": "edu-data-claude",
+  "name": "edu-data-template",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
-    // HTTP_PROXY / HTTPS_PROXY / NO_PROXY del host Docker se pasan solos al build
-    // (son build args predefinidos de Docker), no hace falta declararlos.
+    // Proxy: no se configura acá, Docker lo inyecta en build y contenedor desde ~/.docker/config.json (ver README)
   },
 
   "features": {
@@ -17,7 +16,7 @@
   "containerEnv": {
     // Login, historial y config de Claude Code viven en el volumen de abajo
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
-    // El venv va fuera del workspace: más rápido en Windows y no ensucia el repo
+    // El venv va fuera del workspace: no ensucia el repo
     "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv",
     "UV_LINK_MODE": "copy",
     "PYTHONUNBUFFERED": "1",
@@ -25,7 +24,7 @@
     "REQUESTS_CA_BUNDLE": "/etc/ssl/certs/ca-certificates.crt",
     "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt",
     "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt",
-    "UV_NATIVE_TLS": "1"
+    "UV_SYSTEM_CERTS": "1"
   },
 
   "mounts": [
@@ -52,8 +51,7 @@
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff",
           "editor.formatOnSave": true
-        },
-        "files.eol": "\n"
+        }
       }
     }
   }

@@ -27,4 +27,6 @@
 
 ## Estilo
 - Código y comentarios en español está bien; nombres de funciones en snake_case.
+- Código autoexplicativo, solo comentar cuando es una aclaración del problema del negocio o de la parametría necesaria.
+- Ningún comentario ni docstring con más de 150 caracteres, consultar en caso de ser necesario más.
 - Ruff para formato y lint (`uv run ruff check . && uv run ruff format .`).
