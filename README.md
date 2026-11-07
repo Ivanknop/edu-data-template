@@ -7,12 +7,17 @@ No requiere Python instalado en la máquina: solo Docker.
 - Linux con Docker Engine.
 - VS Code con la extensión **Dev Containers** (`ms-vscode-remote.remote-containers`).
 
-## Usar como plantilla
-1. En GitHub: **Use this template** → **Create a new repository**.
-2. En el repo nuevo, quitar `uv.lock` del `.gitignore` y commitearlo después del primer `uv sync`.
+## Crear un proyecto nuevo
+Esta plantilla no se usa para trabajar: se usa para generar proyectos.
+
+```bash
+scripts/nuevo-proyecto.sh ~/proyectos/mi-analisis
+```
+
+Genera el directorio con todo lo necesario. El versionado (`git init`, remote, commits) queda a cargo de cada proyecto.
 
 ## Uso
-1. Clonar el repo y abrirlo en VS Code.
+1. Abrir la carpeta del proyecto en VS Code.
 2. `Ctrl+Shift+P` → **Dev Containers: Reopen in Container**. La primera vez tarda unos minutos.
 3. En la terminal del contenedor: `claude` y loguearse (una sola vez por máquina: la sesión
    queda guardada en el volumen `edu-data-claude-config`).
