@@ -7,3 +7,6 @@
 *.xls binary
 *.sav binary
 *.dta binary
+
+# Crudos byte a byte: los oficiales suelen venir con CRLF y latin-1; normalizarlos los alteraría
+data/raw/** -text -eol

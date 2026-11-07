@@ -44,6 +44,8 @@ cd "$DESTINO"
 rm -f scripts/nuevo_proyecto.sh
 rmdir --ignore-fail-on-non-empty scripts 2>/dev/null || true
 sed -i '/<!-- plantilla:inicio -->/,/<!-- plantilla:fin -->/d' README.md
+# El bloque de proyecto está comentado en la plantilla: acá se descomenta
+sed -i '/^<!-- proyecto:inicio$/d; /^proyecto:fin -->$/d' README.md
 
 # Secciones por sistema operativo: queda solo la del elegido, sin las marcas
 for s in "${SISTEMAS[@]}"; do
@@ -64,7 +66,13 @@ sed -i '/^uv\.lock$/d' .gitignore
 sed -i "1s/.*/# $NOMBRE/" README.md
 sed -i "s/\"name\": \"edu-data-template\"/\"name\": \"$NOMBRE\"/" .devcontainer/devcontainer.json
 
+# pyproject: el nombre del paquete importable (edu_data) no cambia, lo fija tool.hatch
+SLUG="$(echo "$NOMBRE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')"
+sed -i "s/^name = \"edu-data-template\"$/name = \"$SLUG\"/" pyproject.toml
+sed -i 's/^description = .*/description = "Completar: qué analiza este proyecto"/' pyproject.toml
+
 chmod +x .devcontainer/post-create.sh
 
 echo "Proyecto '$NOMBRE' ($SO) creado en $DESTINO"
 echo "Siguiente: abrir la carpeta en VS Code → Dev Containers: Reopen in Container"
+echo "Antes del primer commit: completar README.md, data/README.md y la description de pyproject.toml"
