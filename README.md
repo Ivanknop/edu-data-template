@@ -5,15 +5,18 @@ No requiere Python instalado en la máquina: solo Docker.
 
 ## Requisitos
 - Linux con Docker Engine.
+- Windows con Docker Desktop (backend WSL2).
+- Recomendado: tener el proyecto dentro de WSL2 (`~/proyectos/...` en Ubuntu) y abrirlo con VS Code vía WSL.
+  En el disco de Windows (`C:\...`) funciona, pero el acceso a archivos desde el contenedor es lento.
 - VS Code con la extensión **Dev Containers** (`ms-vscode-remote.remote-containers`).
 
 ## Crear un proyecto nuevo
 Esta plantilla no se usa para trabajar: se usa para generar proyectos.
 
 ```bash
-scripts/nuevo-proyecto.sh ~/proyectos/mi-analisis
+scripts/nuevo_proyecto.sh -name ~/proyectos/mi-analisis -so linux     # o -so windows
 ```
-
+En Windows, correrlo desde WSL2 o Git Bash.
 Genera el directorio con todo lo necesario. El versionado (`git init`, remote, commits) queda a cargo de cada proyecto.
 
 ## Uso
