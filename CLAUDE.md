@@ -5,6 +5,7 @@
   No se escribe ni modifica código hasta que el desarrollador lo pida explícitamente.
 - No se hacen commits ni push sin autorización explícita.
 - Ante rediseños o pedidos ambiguos, preguntar antes: alcance, formato, ejes, cortes, medida.
+- Para actualizar el proyecto a una versión nueva de la plantilla: skill `actualizar-plantilla`.
 
 ## Entorno
 - Corre dentro de un devcontainer (Debian + Python 3.12). Las dependencias se gestionan con **uv**.

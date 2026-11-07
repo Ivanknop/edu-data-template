@@ -32,6 +32,14 @@ if [[ -e "$DESTINO" ]]; then
   exit 1
 fi
 
+# Origen y versión de la plantilla, para poder actualizar el proyecto después
+URL_PLANTILLA="$(git -C "$PLANTILLA" remote get-url origin 2>/dev/null || echo "$PLANTILLA")"
+VERSION_PLANTILLA="$(git -C "$PLANTILLA" describe --tags --always)"
+if [[ -n "$(git -C "$PLANTILLA" status --porcelain)" ]]; then
+  echo "Aviso: la plantilla tiene cambios sin commitear; el proyecto los incluye," >&2
+  echo "pero .plantilla.json registra la versión $VERSION_PLANTILLA." >&2
+fi
+
 mkdir -p "$DESTINO"
 DESTINO="$(cd "$DESTINO" && pwd)"
 
@@ -41,8 +49,14 @@ git -C "$PLANTILLA" ls-files -z | (cd "$PLANTILLA" && xargs -0 cp --parents -t "
 cd "$DESTINO"
 
 # Lo exclusivo de la plantilla no pasa al proyecto
-rm -f scripts/nuevo_proyecto.sh
+rm -f scripts/nuevo_proyecto.sh CHANGELOG.md
+rm -rf .plantilla
 rmdir --ignore-fail-on-non-empty scripts 2>/dev/null || true
+
+cat > .plantilla.json <<JSON
+{"plantilla": "$URL_PLANTILLA", "version": "$VERSION_PLANTILLA", "so": "$SO"}
+JSON
+
 sed -i '/<!-- plantilla:inicio -->/,/<!-- plantilla:fin -->/d' README.md
 # El bloque de proyecto está comentado en la plantilla: acá se descomenta
 sed -i '/^<!-- proyecto:inicio$/d; /^proyecto:fin -->$/d' README.md

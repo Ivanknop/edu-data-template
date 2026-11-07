@@ -48,6 +48,13 @@ En Windows, correrlo desde WSL2 o Git Bash.
 Genera el directorio con todo lo necesario: nombre del proyecto en `pyproject.toml` y en el
 devcontainer, y un README propio con secciones a completar.
 El versionado (`git init`, remote, commits) queda a cargo de cada proyecto.
+
+## Versiones y actualización de proyectos
+- Cada proyecto guarda en `.plantilla.json` el origen y la versión de la plantilla
+  (`git describe --tags --always`: un tag o un hash). Conviene generar desde un tag.
+- Al publicar una versión: entrada en `CHANGELOG.md` ("Cambios" y "Pasos manuales") y tag.
+- `.plantilla/excluir_actualizacion.txt` lista lo que la actualización nunca toca.
+- En el proyecto, la skill `actualizar-plantilla` trae los cambios con merge de tres vías.
 <!-- plantilla:fin -->
 
 ## Uso
@@ -62,7 +69,8 @@ El versionado (`git init`, remote, commits) queda a cargo de cada proyecto.
 - Claude Code (CLI + extensión de VS Code) con un `CLAUDE.md` que fija convenciones de datos
   y rigor estadístico (ponderadores, valores plausibles).
 - Skills de Claude en `.claude/skills/`: `dataset-nuevo` (incorporar y documentar un dataset),
-  `validar-calidad` (controles y registro de alertas) y `publicar` (GitHub Pages).
+  `validar-calidad` (controles y registro de alertas), `publicar` (GitHub Pages) y
+  `actualizar-plantilla` (traer cambios de versiones nuevas de la plantilla).
 - Paquete `edu_data` con funciones genéricas y tests (`uv run pytest`):
   - `io`: detectar formato, leer CSV oficiales (vacío ≠ 0, códigos como texto), unificar
     esquemas entre períodos, leer hojas de Excel.

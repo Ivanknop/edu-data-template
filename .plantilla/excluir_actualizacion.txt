@@ -1,0 +1,14 @@
+# Rutas que la actualización desde la plantilla nunca toca (sintaxis de .gitignore).
+# Se lee siempre de la versión destino de la plantilla.
+
+# Exclusivo de la plantilla: no se copia a los proyectos
+/scripts/
+/.plantilla/
+/CHANGELOG.md
+
+# Propio de cada proyecto (el README del proyecto se genera a partir del de la plantilla)
+/README.md
+/data/
+/notebooks/
+/outputs/
+/.plantilla.json
