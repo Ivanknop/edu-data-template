@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import pytest
 
@@ -25,3 +27,21 @@ def serie():
         for periodo, valor in zip(range(2019, 2024), valores, strict=True):
             filas.append({"unidad": unidad, "periodo": periodo, "valor": valor})
     return pd.DataFrame(filas)
+
+
+@pytest.fixture(scope="session")
+def requiere_crudos():
+    """Para fixtures de datos reales: `requiere_crudos(condicion, motivo)`.
+
+    Si no se cumple la condición (faltan crudos en data/raw/): skip en local, fail en la CI
+    (variable `CI` definida), donde los crudos deberían estar.
+    """
+
+    def verificar(condicion: bool, motivo: str) -> None:
+        if condicion:
+            return
+        if os.environ.get("CI"):
+            pytest.fail(motivo)
+        pytest.skip(motivo)
+
+    return verificar

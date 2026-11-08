@@ -36,8 +36,17 @@
 |---|---|
 |  |  |
 
+## Decisiones
+Lo que se decidió con el usuario, con fecha y evidencia: alcance, desfase de período,
+imputaciones (regla y cantidad de celdas), exclusiones. Va acá y no en la memoria de Claude.
+
+| Fecha | Decisión | Evidencia / motivo |
+|---|---|---|
+|  |  |  |
+
 ## Calidad
 - Problemas conocidos y alertas registradas.
+- Señales revisadas, sin alerta (para no reabrirlas).
 
 ## Pendientes
 - Variables sin definición oficial y preguntas abiertas a la fuente.

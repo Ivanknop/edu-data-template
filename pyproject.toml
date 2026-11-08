@@ -24,9 +24,7 @@ dependencies = [
     "plotly>=5.22",
     # Geografía (departamentos, jurisdicciones)
     "geopandas>=1.0",
-    # Notebooks y utilidades
-    "jupyterlab>=4.2",
-    "ipykernel>=6.29",
+    # Utilidades
     "requests>=2.32",
     "tqdm>=4.66",
 ]

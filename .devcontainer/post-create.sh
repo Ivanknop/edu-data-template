@@ -7,8 +7,12 @@ sudo chown -R vscode:vscode /home/vscode/.claude /home/vscode/.cache/uv /home/vs
 echo ">> Instalando dependencias Python con uv..."
 uv sync
 
-echo ">> Registrando kernel de Jupyter..."
-uv run python -m ipykernel install --user --name edu-data --display-name "Python (edu-data)"
+# Opcional (~300 MB): navegador sin interfaz para que Claude verifique visores con capturas.
+# Se activa con INSTALAR_NAVEGADOR=1 en el host antes de abrir el contenedor (ver docs/entorno.md).
+if [[ "${INSTALAR_NAVEGADOR:-0}" == "1" ]]; then
+  echo ">> Instalando Chromium para Playwright..."
+  uv run --with playwright playwright install --with-deps chromium
+fi
 
 echo ">> Listo."
 echo "   Python:      $(uv run python --version)"

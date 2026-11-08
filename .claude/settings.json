@@ -14,11 +14,11 @@
       "Bash(jq:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(time:*)"
     ],
     "deny": [
       "Edit(data/raw/**)",
-      "Write(data/raw/**)",
       "Bash(rm -rf data/raw:*)",
       "Read(./.env)",
       "Read(./.env.*)"

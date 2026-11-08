@@ -34,6 +34,12 @@ fi
 
 # Origen y versión de la plantilla, para poder actualizar el proyecto después
 URL_PLANTILLA="$(git -C "$PLANTILLA" remote get-url origin 2>/dev/null || echo "$PLANTILLA")"
+# Se guarda HTTPS: en un contenedor sin clave SSH, el clon para actualizar fallaría
+if [[ "$URL_PLANTILLA" =~ ^git@([^:]+):(.+)$ ]]; then
+  URL_PLANTILLA="https://${BASH_REMATCH[1]}/${BASH_REMATCH[2]}"
+elif [[ "$URL_PLANTILLA" =~ ^ssh://git@([^/]+)/(.+)$ ]]; then
+  URL_PLANTILLA="https://${BASH_REMATCH[1]}/${BASH_REMATCH[2]}"
+fi
 VERSION_PLANTILLA="$(git -C "$PLANTILLA" describe --tags --always)"
 if [[ -n "$(git -C "$PLANTILLA" status --porcelain)" ]]; then
   echo "Aviso: la plantilla tiene cambios sin commitear; el proyecto los incluye," >&2
@@ -57,21 +63,25 @@ cat > .plantilla.json <<JSON
 {"plantilla": "$URL_PLANTILLA", "version": "$VERSION_PLANTILLA", "so": "$SO"}
 JSON
 
+# README: solo las secciones del proyecto (el entorno está en docs/entorno.md)
 sed -i '/<!-- plantilla:inicio -->/,/<!-- plantilla:fin -->/d' README.md
 # El bloque de proyecto está comentado en la plantilla: acá se descomenta
 sed -i '/^<!-- proyecto:inicio$/d; /^proyecto:fin -->$/d' README.md
+sed -i "s|(URL_PLANTILLA)|(${URL_PLANTILLA%.git})|; s|VERSION_PLANTILLA|$VERSION_PLANTILLA|" README.md
 
-# Secciones por sistema operativo: queda solo la del elegido, sin las marcas
+# docs/entorno.md: queda solo la sección del sistema operativo elegido, sin las marcas
 for s in "${SISTEMAS[@]}"; do
   if [[ "$s" == "$SO" ]]; then
-    sed -i "/<!-- so:$s:\(inicio\|fin\) -->/d" README.md
+    sed -i "/<!-- so:$s:\(inicio\|fin\) -->/d" docs/entorno.md
   else
-    sed -i "/<!-- so:$s:inicio -->/,/<!-- so:$s:fin -->/d" README.md
+    sed -i "/<!-- so:$s:inicio -->/,/<!-- so:$s:fin -->/d" docs/entorno.md
   fi
 done
 
 # Sin líneas en blanco dobles donde había bloques
-cat -s README.md > README.md.tmp && mv README.md.tmp README.md
+for f in README.md docs/entorno.md; do
+  cat -s "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+done
 
 # En el proyecto derivado el lock se versiona
 sed -i '/^uv\.lock$/d' .gitignore

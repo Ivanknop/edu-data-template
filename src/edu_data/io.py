@@ -13,6 +13,8 @@ SEPARADORES = ";,\t|"
 _CEROS_IZQUIERDA = re.compile(r"^0\d+$")
 _ENTERO = re.compile(r"^-?\d+$")
 _DECIMAL = re.compile(r"^-?\d*\.\d+$|^-?\d+\.?$")
+# Entero sin ceros a la izquierda: el caso más común se resuelve con una sola regex
+_ENTERO_LIMPIO = re.compile(r"^-?(?:0|[1-9]\d*)$")
 
 
 def _decodificar(muestra: bytes) -> tuple[str, str]:
@@ -48,6 +50,8 @@ def _tipar_columna(serie: pd.Series, decimal: str) -> pd.Series:
     valores = serie.dropna()
     if valores.empty:
         return serie.astype("string")
+    if valores.str.match(_ENTERO_LIMPIO).all():
+        return serie.astype("Int64")
     if valores.str.match(_CEROS_IZQUIERDA).any():
         return serie.astype("string")
     if valores.str.match(_ENTERO).all():
@@ -79,17 +83,21 @@ def leer_csv_oficial(
     # Los vacíos se comparan después del strip: " " y "" son el mismo vacío
     vacios = {v.strip() for v in vacios} | {""}
     claves = {c.lower() for c in claves}
-    df = pd.DataFrame(index=crudo.index)
+    # Las columnas se arman aparte y el DataFrame se crea una sola vez: agregarlas de a una
+    # fragmenta el bloque de memoria y es mucho más lento en archivos anchos
+    columnas = {}
     texto_por_ceros = []
     for columna in crudo.columns:
         serie = crudo[columna].str.strip().astype("string")
         serie = serie.mask(serie.isin(vacios))
         if columna in claves:
-            df[columna] = serie
+            columnas[columna] = serie
             continue
-        df[columna] = _tipar_columna(serie, decimal)
-        if df[columna].dtype == "string" and serie.dropna().str.match(_CEROS_IZQUIERDA).any():
+        columnas[columna] = _tipar_columna(serie, decimal)
+        es_texto = columnas[columna].dtype == "string"
+        if es_texto and serie.dropna().str.match(_CEROS_IZQUIERDA).any():
             texto_por_ceros.append(columna)
+    df = pd.DataFrame(columnas, index=crudo.index)
 
     df.attrs["formato"] = {**formato, "sep": sep, "encoding": encoding}
     df.attrs["columnas_texto_por_ceros"] = texto_por_ceros
@@ -111,9 +119,11 @@ def unificar_esquema(
     for periodo, df in dfs.items():
         ausentes = [c for c in columnas if c not in df.columns]
         nuevo = df.reindex(columns=columnas)
-        for columna in ausentes:
-            if columna in tipos:
-                nuevo[columna] = nuevo[columna].astype(tipos[columna])
+        # attrs se asignan al final: pandas los copia en cada operación sobre el DataFrame
+        nuevo.attrs = {}
+        tipos_ausentes = {c: tipos[c] for c in ausentes if c in tipos}
+        if tipos_ausentes:
+            nuevo = nuevo.astype(tipos_ausentes)
         nuevo.attrs = {**df.attrs, "columnas_ausentes": ausentes}
         unificados[periodo] = nuevo
     return unificados

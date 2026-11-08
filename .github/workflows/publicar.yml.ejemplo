@@ -37,7 +37,7 @@ jobs:
 
       # Reemplazar por la construcción real del proyecto (raw → processed → outputs)
       - name: Construir
-        run: uv run python -m edu_data.construir
+        run: uv run python -m edu_data.<modulo>
 
       - uses: actions/upload-pages-artifact@v3
         with:

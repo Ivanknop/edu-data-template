@@ -3,7 +3,7 @@
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
-    // Proxy: no se configura acá, Docker lo inyecta en build y contenedor desde ~/.docker/config.json (ver README)
+    // Proxy: no se configura acá, Docker lo inyecta en build y contenedor desde ~/.docker/config.json (ver docs/entorno.md)
   },
 
   "features": {
@@ -24,7 +24,9 @@
     "REQUESTS_CA_BUNDLE": "/etc/ssl/certs/ca-certificates.crt",
     "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt",
     "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt",
-    "UV_SYSTEM_CERTS": "1"
+    "UV_SYSTEM_CERTS": "1",
+    // Opcional: INSTALAR_NAVEGADOR=1 en el host instala Chromium en post-create (docs/entorno.md)
+    "INSTALAR_NAVEGADOR": "${localEnv:INSTALAR_NAVEGADOR}"
   },
 
   "mounts": [
@@ -41,13 +43,11 @@
       "extensions": [
         "anthropic.claude-code",
         "ms-python.python",
-        "ms-toolsai.jupyter",
         "charliermarsh.ruff",
         "mechatroner.rainbow-csv"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python",
-        "jupyter.notebookFileRoot": "${workspaceFolder}",
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff",
           "editor.formatOnSave": true

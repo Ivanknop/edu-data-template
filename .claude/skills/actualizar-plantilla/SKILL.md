@@ -80,7 +80,13 @@ Para cada archivo `f` de `a_aplicar.txt`, según su estado en `cambios.tsv`:
 ## f. Cierre
 - Aplicar los **pasos manuales** del CHANGELOG (los que requieran decisión, consultarlos).
 - Actualizar `version` en `.plantilla.json` a `D` (el tag si lo tiene, si no el hash),
-  conservando `plantilla` y `so`.
+  conservando `plantilla` y `so`. Si `plantilla` es una URL SSH (`git@github.com:X/Y.git`),
+  proponer la HTTPS (`https://github.com/X/Y.git`).
+- README (excluido de la actualización): si tiene la línea "Generado desde edu-data-template",
+  actualizar ahí la versión a `D`. No tocar nada más del README.
+- `docs/entorno.md` (excluido): si cambió entre `B` y `D`, avisarlo y mostrar el diff de la
+  plantilla (`git -C "$C" diff "$B" "$D" -- docs/entorno.md`). Los bloques `so:` se resuelven a
+  mano según `so`; no pisar el archivo del proyecto sin confirmar.
 - Correr y reportar: `uv sync`, `uv run ruff check .`, `uv run ruff format --check .`,
   `uv run pytest`. Si algo falla, reportarlo; no corregir código del proyecto sin consultar.
   Si falla algo que ya fallaba antes de actualizar, aclararlo.

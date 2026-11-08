@@ -9,6 +9,8 @@
 # Propio de cada proyecto (el README del proyecto se genera a partir del de la plantilla)
 /README.md
 /data/
-/notebooks/
 /outputs/
 /.plantilla.json
+
+# Se arma según el sistema operativo al generar: si cambia, el CHANGELOG lo avisa como paso manual
+/docs/entorno.md
